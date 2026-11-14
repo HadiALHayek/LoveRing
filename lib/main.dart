@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'features/pairing/pairing_screen.dart';
 import 'features/permissions/permissions_screen.dart';
 import 'features/ping/ping_screen.dart';
+import 'features/settings/settings_provider.dart';
+
 import 'services/auth_service.dart';
 import 'services/fcm_service.dart';
 
@@ -58,13 +60,34 @@ class _LoveRingAppState extends ConsumerState<LoveRingApp> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(settingsNotifierProvider);
+
     return MaterialApp(
       navigatorKey: _navigatorKey,
       title: 'LoveRing',
+      themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: settings.languageCode == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       home: _showPermissionsScreen
           ? PermissionsScreen(
               onPermissionsCompleted: () {
