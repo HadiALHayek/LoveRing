@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Users collection:
+    // Clients can read their own user document.
+    // Clients can ONLY update their own fcmToken field.
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow update: if isOwner(userId)
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fcmToken', 'lastTokenUpdate']);
+      allow create, delete: if false; // Only backend admin can create/delete user docs or change pairing fields
+    }
+
+    // Pairings collection:
+    // Clients can read a pairing document if they are the creator or partner.
+    match /pairings/{pairId} {
+      allow read: if isAuthenticated() && (
+        resource.data.creatorUid == request.auth.uid ||
+        resource.data.partnerUid == request.auth.uid ||
+        resource.data.status == 'pending'
+      );
+      allow write: if false; // All pairing creations, acceptances, and unpairings must go through Vercel backend
+    }
+
+    // Pings collection:
+    // Only backend Admin SDK can read/write pings.
+    match /pings/{pingId} {
+      allow read, write: if false;
+    }
+  }
+}

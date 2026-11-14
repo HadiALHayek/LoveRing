@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/pair/:pairId",
+      "destination": "/pair/index.html"
+    }
+  ]
+}

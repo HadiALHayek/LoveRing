@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoveRing - Pair With Your Partner</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      color: #333333;
+      border-radius: 24px;
+      padding: 40px 24px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    .heart-icon {
+      font-size: 64px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      color: #e91e63;
+      font-size: 28px;
+    }
+    p {
+      margin: 0 0 24px;
+      color: #666666;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px 24px;
+      background: #e91e63;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #d81b60;
+    }
+    .subtext {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #888888;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="heart-icon">💖</div>
+    <h1>You've been invited!</h1>
+    <p>Your partner wants to link their phone with yours on <strong>LoveRing</strong> to send instant love pings!</p>
+    <a id="openAppBtn" href="#" class="btn">Open LoveRing App</a>
+    <p class="subtext">If the app doesn't open automatically, install LoveRing from Google Play.</p>
+  </div>
+
+  <script>
+    (function() {
+      const pathParts = window.location.pathname.split('/');
+      const pairId = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+      const customSchemeUrl = "loveRing://pair/" + pairId;
+
+      const openAppBtn = document.getElementById('openAppBtn');
+      if (pairId) {
+        openAppBtn.href = customSchemeUrl;
+        // Attempt automatic redirect to custom scheme
+        window.location.href = customSchemeUrl;
+      }
+    })();
+  </script>
+</body>
+</html>
